@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Course Grades</title>
+</head>
+<body>
+    <form id="courseForm">
+        <label for="totalCourses">Total number of courses:</label>
+        <input type="number" id="totalCourses" name="totalCourses">
+        <button type="button" onclick="generateFields()">Generate Fields</button>
+    </form>
+    <div id="courseFields"></div>
+
+    <script>
+        function generateFields() {
+            const totalCourses = parseInt(document.getElementById('totalCourses').value);
+            const courseFieldsDiv = document.getElementById('courseFields');
+            courseFieldsDiv.innerHTML = '';
+
+            for (let i = 1; i <= totalCourses; i++) {
+                const courseNameInput = document.createElement('input');
+                courseNameInput.type = 'text';
+                courseNameInput.name = `courseName${i}`;
+                courseNameInput.placeholder = `Course ${i} Name`;
+
+                const gradeInput = document.createElement('input');
+                gradeInput.type = 'text';
+                gradeInput.name = `grade${i}`;
+                gradeInput.placeholder = `Grade for Course ${i}`;
+
+                const creditInput = document.createElement('input');
+                creditInput.type = 'integer';
+                creditInput.name = `credit${i}`;
+                creditInput.placeholder = `Credit for course ${i}`;
+
+
+                courseFieldsDiv.appendChild(courseNameInput);
+                courseFieldsDiv.appendChild(gradeInput);
+                courseFieldsDiv.appendChild(creditInput);
+            }
+        }
+    </script>
+    <script>
+// Sample data (replace with your actual data)
+const courseData = [
+    { code: 'CSE101', credit: 3, grade: 'A' },
+    { code: 'MAT201', credit: 4, grade: 'B' },
+    // Add more courses as needed
+];
+
+function calculateCGPA(courseData) {
+    let totalWeightedCredits = 0;
+    let totalCredits = 0;
+
+    for (const course of courseData) {
+        const gradeWeight = getGradeWeight(course.grade); // Function to map grades to weights
+        totalWeightedCredits += course.credit * gradeWeight;
+        totalCredits += course.credit;
+    }
+
+    const cgpa = totalWeightedCredits / totalCredits;
+    return cgpa.toFixed(2); // Rounded to 2 decimal places
+}
+
+function getGradeWeight(grade) {
+    // Map grades to weights (customize as per your grading system)
+    switch (grade) {
+        case 'A': return 4.0;
+        case 'B': return 3.0;
+        case 'C': return 2.0;
+        // Add more cases for other grades
+        default: return 0.0; // Handle invalid grades
+    }
+}
+
+// Example usage:
+const userCGPA = calculateCGPA(courseData);
+console.log(`Your CGPA is: ${userCGPA}`);
+</script></body></html>
