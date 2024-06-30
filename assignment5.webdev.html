@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My E-Commerce App</title>
+    <link rel="stylesheet" href="styles/global.css">
+    <style>/* styles/global.css */
+
+        /* Reset some default styles */
+        html, body {
+          padding: 0;
+          margin: 0;
+          font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+          line-height: 1.6;
+          font-size: 18px;
+        }
+        
+        /* Box-sizing for all elements */
+        * {
+          box-sizing: border-box;
+        }
+        
+        /* Link styles */
+        a {
+          color: #0070f3;
+          text-decoration: none;
+        }
+        
+        a:hover {
+          text-decoration: underline;
+        }
+        
+        /* Image styles */
+        img {
+          max-width: 100%;
+          display: block;
+        }
+        </style>
+</head>
+<body>
+    <header>
+        <h1>My E-Commerce Store</h1>
+        <!-- Add navigation links here -->
+    </header>
+    <img src="C:\Users\Kshama\OneDrive\Desktop\minidrafter.png">
+    <img src="C:\Users\Kshama\OneDrive\Desktop\lotion.png">
+    <img src="C:\Users\Kshama\OneDrive\Desktop\bonsai.png">
+    <img src="C:\Users\Kshama\OneDrive\Desktop\laptop.png">
+
+    <main>
+        <!-- React components will be rendered here -->
+        <div id="root"></div>
+    </main>
+
+    <footer>
+        <p>© 2024 My E-Commerce Store</p>
+    </footer>
+
+    <!-- Include your React build files (e.g., bundle.js) here -->
+    <script>
+        // src/components/ProductList.js
+import React from 'react';
+
+const ProductList = () => {
+  // Fetch product data (replace with your actual data)
+  const products = [
+    { id: 1, name: 'drafter', price: 700 },
+    { id: 2, name: 'lotion', price: 180 },
+    { id: 3, name: 'bonsai', price: 1100 },
+    { id: 4, name: 'laptop', price: 50000 }
+    // Add more products here
+  ];
+
+  return (
+    <div>
+      <h2>Products for Sale</h2>
+      <ul>
+        {products.map((product) => (
+          <li key={product.id}>
+            {product.name} - ${product.price}
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+};
+
+export default ProductList;
+
+// src/components/ProductDetails.js
+import React from 'react';
+
+const ProductDetails = ({ product }) => {
+  return (
+    <div>
+      <h2>{product.name}</h2>
+      <p>Price: ${product.price}</p>
+      {/* Add more product details here */}
+    </div>
+  );
+};
+
+export default ProductDetails;
+
+
+// src/contexts/CartContext.js
+import React, { createContext, useContext, useState } from 'react';
+
+const CartContext = createContext();
+
+export const useCart = () => {
+  return useContext(CartContext);
+};
+
+export const CartProvider = ({ children }) => {
+  const [cartItems, setCartItems] = useState([]);
+
+  const addToCart = (product) => {
+    setCartItems((prevItems) => [...prevItems, product]);
+  };
+
+  const removeFromCart = (productId) => {
+    setCartItems((prevItems) => prevItems.filter((item) => item.id !== productId));
+  };
+
+  return (
+    <CartContext.Provider value={{ cartItems, addToCart, removeFromCart }}>
+      {children}
+    </CartContext.Provider>
+  );
+};
+// src/index.js
+import React from 'react';
+import ReactDOM from 'react-dom';
+import App from './App';
+import { CartProvider } from './contexts/CartContext';
+
+ReactDOM.render(
+  <CartProvider>
+    <App />
+  </CartProvider>,
+  document.getElementById('root')
+);
+
+// src/components/ProductList.js
+import React from 'react';
+import { useCart } from '../contexts/CartContext';
+
+const ProductList = () => {
+  const { addToCart } = useCart();
+
+  const handleAddToCart = (product) => {
+    addToCart(product);
+  };
+
+  // ... (your existing code for displaying products)
+  // Add a button to each product:
+  return (
+    <div>
+      {products.map((product) => (
+        <div key={product.id}>
+          <h3>{product.name}</h3>
+          <p>Price: ${product.price}</p>
+          <button onClick={() => handleAddToCart(product)}>Add to Cart</button>
+        </div>
+      ))}
+    </div>
+  );
+};
+
+export default ProductList;
+
+// src/components/CartPage.js
+import React from 'react';
+import { useCart } from '../contexts/CartContext';
+
+const CartPage = () => {
+  const { cartItems, removeFromCart } = useCart();
+
+  return (
+    <div>
+      <h2>Your Cart</h2>
+      <ul>
+        {cartItems.map((item) => (
+          <li key={item.id}>
+            {item.name} - ${item.price}
+            <button onClick={() => removeFromCart(item.id)}>Remove</button>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+};
+
+export default CartPage;
+
+    </script>
+</body>
+</html>
